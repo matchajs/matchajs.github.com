@@ -26,9 +26,10 @@ var NULL = null,
     // see: http://jsperf.com/array-indexof-speed-test/2
     function indexOf(arr, item) {
         return Array.prototype.indexOf ? arr.indexOf(item) : (function(){
-            for (var i = 0, len = arr.length; i < len; i++) {
-                if (arr[i] === item) {
-                    return i;
+            var len = arr.length;
+            while(len--) {
+                if (arr[len] === item) {
+                    return len;
                 }
             }
             return -1;
