@@ -13,10 +13,19 @@
 <button type="submit">提交</button>
 </form>
 <script>
-document.getElementById('post_iframe').onload = function(e) {
+(function(window, undefined){
+  var $postIframe = document.getElementById('post_iframe');
 
+	var fn = function(event){
 
-};
+	};
+
+	if ($postIframe.addEventListener) {
+		$postIframe.addEventListener('load', fn, true);
+	} else {
+		$postIframe.attachEvent('onload', fn);
+	}
+})(window);
 </script>
 </body>
 </html>
