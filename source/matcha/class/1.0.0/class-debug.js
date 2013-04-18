@@ -1,48 +1,49 @@
-/**
- *
- * Class Models
- *
- * thansks:
- *  - http://mootools.net/docs/core/Class/Class
- *  - http://ejohn.org/blog/simple-javascript-inheritance/
- *  - https://github.com/aralejs/class
- *  - http://uxebu.com/blog/2011/02/23/object-based-inheritance-for-ecmascript-5/
- *
- * @author kidney<kidneyleung@gmail.com>
- * 
- */
+// Class Models
+//
+// @author kidney<kidneyleung@gmail.com>
+//
+// thansks:
+// - http://mootools.net/docs/core/Class/Class
+// - http://ejohn.org/blog/simple-javascript-inheritance/
+// - https://github.com/aralejs/class
+// - http://uxebu.com/blog/2011/02/23/object-based-inheritance-for-ecmascript-5/
 define("matcha/class/1.0.0/class-debug", [], function(require, exports, module) {
-// Helper
-var NULL = null,
-    coreToString = Object.prototype.toString;
+    "use strict";
 
-    function isArray(obj) {
-        return Array.isArray ?  Array.isArray(obj) : coreToString.call(obj) === '[object Array]';
-    }
+    // Helpers
+    var coreToString = Object.prototype.toString,
+
+        isArray = Array.isArray || function(obj) {
+            return coreToString.call(obj) == '[object Array]';
+        },
+
+        // see: http://jsperf.com/array-indexof-speed-test/2
+        indexOf = Array.prototype.indexOf ?
+            function(arr, item) {
+                return arr.indexOf(item);
+            } : function(arr, item) {
+                var len = arr.length;
+                while(len--) {
+                    if (arr[len] === item) {
+                        return len;
+                    }
+                }
+                return -1;
+            },
+
+        createProto = Object.__proto__ ?
+            function(proto) {
+                return {__proto__: proto};
+            } : function(proto) {
+                var klass = function() {};
+                klass.prototype = proto;
+                return new klass();
+            };
+
     function isFunction(obj) {
         return coreToString.call(obj) === '[object Function]';
     }
 
-    // see: http://jsperf.com/array-indexof-speed-test/2
-    function indexOf(arr, item) {
-        return Array.prototype.indexOf ? arr.indexOf(item) : (function(){
-            var len = arr.length;
-            while(len--) {
-                if (arr[len] === item) {
-                    return len;
-                }
-            }
-            return -1;
-        })();
-    }
-
-    function createProto(proto) {
-        return Object.__proto__ ? {__proto__: proto} : (function(){
-            function klass() {}
-            klass.prototype = proto;
-            return new klass();
-        })();
-    }
     function mix(target, source, filterList) {
         // Copy "all" properties including inherited ones.
         var item;
@@ -82,7 +83,7 @@ var NULL = null,
                 parent = self.parent,
                 result;
 
-            thisFn.parent = (parent) ? parent[name] : NULL;
+            thisFn.parent = (parent) ? parent[name] : null;
 
             result = method.apply(thisFn, arguments);
 
@@ -93,16 +94,16 @@ var NULL = null,
     }
 
     // The base Class implementation (does nothing)
-    function Class() {}
+    var Class = function() {};
 
     // Create a new Class that inherits from this class
     Class.create = function(parent, prop) {
         if (!isFunction(parent)) {
             prop = parent;
-            parent = NULL;
+            parent = null;
         }
 
-        prop = isFunction(prop) ? {init:prop} : (prop || {});
+        prop = isFunction(prop) ? {init: prop} : (prop || {});
 
         if (!parent && prop.Extends) {
             parent = prop.Extends;
@@ -114,10 +115,11 @@ var NULL = null,
             parentProto = createProto(parentExisted);
 
         // created class constructor
-        function newClass() {
+        var newClass = function() {
             var self = this;
+
             return (self.init) ? self.init.apply(self, arguments) : self;
-        }
+        };
 
         // Set a convenience property in case the parent's prototype is
         // needed later.
@@ -138,13 +140,19 @@ var NULL = null,
         newClass.extend = function(prop) {
             return Class.create(this, prop);
         };
+
         newClass.implement = implement;
 
         return newClass;
     };
 
     Class.Mutators = {
+        /**
+         * Extends is an empty function by default
+         * @constructor
+         */
         Extends: function(){},
+
         /**
          * Copy the properties over onto the this class's prototype
          * @param items

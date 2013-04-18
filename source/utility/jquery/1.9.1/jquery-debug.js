@@ -1,4 +1,4 @@
-define('matcha/jquery/1.9.1/jquery-debug', [], function() {
+define("utility/jquery/1.9.1/jquery-debug", [], function() {
 /*!
  * jQuery JavaScript Library v1.9.1
  * http://jquery.com/
