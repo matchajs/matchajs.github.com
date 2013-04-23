@@ -1,12 +1,14 @@
-// Class Models
-//
-// @author kidney<kidneyleung@gmail.com>
-//
-// thansks:
-// - http://mootools.net/docs/core/Class/Class
-// - http://ejohn.org/blog/simple-javascript-inheritance/
-// - https://github.com/aralejs/class
-// - http://uxebu.com/blog/2011/02/23/object-based-inheritance-for-ecmascript-5/
+/**
+ * Class
+ *
+ * Thanks
+ *  - http://mootools.net/docs/core/Class/Class
+ *  - http://ejohn.org/blog/simple-javascript-inheritance/
+ *  - https://github.com/aralejs/class
+ *  - http://uxebu.com/blog/2011/02/23/object-based-inheritance-for-ecmascript-5/
+ *
+ *  @author kidney<kidneyleung@gmail.com>
+ */
 define("matcha/class/1.0.0/class-debug", [], function(require, exports, module) {
     "use strict";
 
@@ -105,9 +107,6 @@ define("matcha/class/1.0.0/class-debug", [], function(require, exports, module) 
 
         prop = isFunction(prop) ? {init: prop} : (prop || {});
 
-        if (!parent && prop.Extends) {
-            parent = prop.Extends;
-        }
         parent = parent || Class;
 
         // Instantiate a base class
@@ -147,12 +146,6 @@ define("matcha/class/1.0.0/class-debug", [], function(require, exports, module) 
     };
 
     Class.Mutators = {
-        /**
-         * Extends is an empty function by default
-         * @constructor
-         */
-        Extends: function(){},
-
         /**
          * Copy the properties over onto the this class's prototype
          * @param items
